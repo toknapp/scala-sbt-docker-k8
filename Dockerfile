@@ -5,14 +5,11 @@
 #
 
 # Pull base image
-FROM openjdk:8u151
+FROM openjdk:9.0.4
 
 # Env variables
-ENV SCALA_VERSION 2.12.5
-ENV SBT_VERSION 1.1.1
-
-# Scala expects this file
-RUN touch /usr/lib/jvm/java-8-openjdk-amd64/release
+ENV SCALA_VERSION 2.12.6
+ENV SBT_VERSION 1.1.5
 
 # Install Scala
 ## Piping curl directly in tar
@@ -47,7 +44,9 @@ RUN \
 RUN \
     curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     apt-key fingerprint 0EBFCD88 && \
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+    xenial \
+    stable" && \
     apt-get update && \
     apt-get remove -y docker docker-engine docker.io && \
     apt-get install -y google-cloud-sdk kubectl docker-ce && \
