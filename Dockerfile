@@ -5,11 +5,11 @@
 #
 
 # Pull base image
-FROM openjdk:8u151
+FROM openjdk:11.0.2
 
 # Env variables
-ENV SCALA_VERSION 2.12.5
-ENV SBT_VERSION 1.1.1
+ENV SCALA_VERSION 2.12.8
+ENV SBT_VERSION 1.2.8
 
 # Scala expects this file
 RUN touch /usr/lib/jvm/java-8-openjdk-amd64/release
@@ -28,7 +28,13 @@ RUN \
   rm sbt-$SBT_VERSION.deb && \
   apt-get update && \
   apt-get install sbt && \
-  sbt sbtVersion
+  sbt sbtVersion && \
+  mkdir project && \
+  echo "scalaVersion := \"${SCALA_VERSION}\"" > build.sbt && \
+  echo "sbt.version=${SBT_VERSION}" > project/build.properties && \
+  echo "case object Temp" > Temp.scala && \
+  sbt compile && \
+  rm -r project && rm build.sbt && rm Temp.scala && rm -r target
 
 #
 RUN \
